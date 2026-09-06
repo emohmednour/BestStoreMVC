@@ -136,3 +136,4 @@ E:\BestStoreMVC\BestStoreMVC\BestStoreMVC\obj\Debug\net8.0\refint\BestStoreMVC.d
 E:\BestStoreMVC\BestStoreMVC\BestStoreMVC\obj\Debug\net8.0\BestStoreMVC.pdb
 E:\BestStoreMVC\BestStoreMVC\BestStoreMVC\obj\Debug\net8.0\BestStoreMVC.genruntimeconfig.cache
 E:\BestStoreMVC\BestStoreMVC\BestStoreMVC\obj\Debug\net8.0\ref\BestStoreMVC.dll
+E:\BestStoreMVC\BestStoreMVC\BestStoreMVC\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
