@@ -1,28 +1,83 @@
-﻿@model List<Product>
+﻿
+@model List<Product>
+@{
+    var pageNumber = (int)ViewData["pageNumber"]!;
+    var TotalPage = (int)ViewData["TotalPage"]!;
+    var search = (string)ViewData["Search"]!; 
 
 
+    var column = (string)ViewData["Column"]!;
+    var orderby = (string)ViewData["OrderBy"]!;
+
+    HtmlString getArrow(string columnsELECTED){
+        {
+
+            if (columnsELECTED != column) return new HtmlString("");
+
+        if (orderby == "desc")
+        {
+            return new HtmlString("<i class='bi bi-arrow-down'></i>");
+        }
+        
+
+            return new HtmlString ("<i class='bi bi-arrow-up'></i>");
+
+        
+
+     }
+
+
+}
+}
     <h2 class="text-center mb-5">List of Products</h2>
 
 <div class="row mb-5">
     <div class="col">
         <a class="btn btn-primary" asp-controller="Products" asp-action="Create">New Product</a>
     </div>
+    <div class="col">
+
+    <form class="d-flex" role ="search">
+        <input class="form-control me -2" type="search" name="search" value="@search" placeholder="Search By Name or Brand" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form> 
+    </div>
    
 </div>
+<script>
+    function SortTable(column){
+        let orderBy = "asc";
 
+        let currentColumn  = "@column";
+        let currentOrderBy = "@orderby";
+
+
+        if(column == currentColumn){
+
+           orderBy = (currentOrderBy == "asc") ? "desc" : "asc";
+
+        } 
+        
+        
+        
+
+
+        window.location.href = "?search=@(search)&column=" + column + "&orderby=" + orderBy
+    }
+</script>
 
 
 
 <table class="table">
     <thead>
         <tr>
-            <th >ID</th>
-            <th >Name </th>
-            <th >Brand </th>
-            <th >Category </th>
-            <th >Price </th>
+            <th style="cursor: pointer;" onclick="SortTable('Id')" >ID @(getArrow("Id")) </th>
+            <th style="cursor: pointer;" onclick="SortTable('Name')">Name @(getArrow("Name"))</th>
+            <th style="cursor: pointer;" onclick="SortTable('Brand')">Brand @(getArrow("Brand"))</th>
+            <th style="cursor: pointer;" onclick="SortTable('Category')">Category @(getArrow("Category"))</th>
+            <th style="cursor: pointer;" onclick="SortTable('Price')">Price @(getArrow("Price"))</th>
             <th>Image</th>
-            <th >Created At </th>
+            <th style="cursor: pointer;" onclick="SortTable('CreatedAt')">Created At @(getArrow("CreatedAt"))</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -48,4 +103,24 @@
         }
     </tbody>
 </table>
+
+
+<nav >
+  <ul class="pagination">
+        @for (int i = 1; i <= TotalPage; i++)
+        {
+            string active = "";
+            if (i == pageNumber) active = "active";
+
+
+            <li class="page-item @active" ><a class="page-link" 
+                asp-route-pageNumber ="@i"
+                asp-route-search = "@search"
+                   asp-route-column="@column"
+                   asp-route-orderby="@orderby"
+            >@i</a></li>
+    }
+    
+  </ul>
+</nav>
 

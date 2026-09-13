@@ -5,13 +5,136 @@ using BestStoreMVC.Models;
 
 namespace BestStoreMVC.Controllers
 {
-    public class ProductsController(ApplicationDBContext db, IWebHostEnvironment webHostEnvironment) : Controller
+    public class ProductsController(
+        ApplicationDBContext db,
+        IWebHostEnvironment webHostEnvironment) : Controller
     {
-        public IActionResult Index()
+
+        private readonly int pageSize = 5;
+        public IActionResult Index(int pageNumber,string? search , string? column,string? orderby )
         {
-            var query = db.Products;.OrderByDescending(x => x.Id).ToList();
+            IQueryable<Product> query = db.Products;
 
 
+            //search Function 
+            if (!string.IsNullOrEmpty(search))
+            {
+                query = query.Where(x=>x.Name.Contains(search) || x.Brand.Contains(search)); 
+            }
+
+            //query string function 
+            string[] ValidColumn = {"Id", "Name", "CreatedAt", "Brand", "Category", "Price" };
+            string[] ValidOrderBy = { "desc", "asc" };
+
+
+            if (!ValidColumn.Contains(column)) {
+                column = "Id";
+            }
+            if (!ValidOrderBy.Contains(orderby)) {
+                orderby = "desc";
+            }
+
+
+            //pagenation function 
+            var count = query.Count();
+            if (pageNumber <= 0)
+                 pageNumber = 1;
+
+            if (column == "Name")
+            {
+
+                if (orderby == "asc")
+                {
+                    query = query.OrderBy(x => x.Name);
+
+                }
+                else
+                {
+                    query = query.OrderByDescending(x => x.Name);
+                }
+            }
+
+            else if (column == "CreatedAt")
+            {
+
+                if (orderby == "asc")
+                {
+                    query = query.OrderBy(x => x.CreatedAt);
+
+                }
+                else
+                {
+                    query = query.OrderByDescending(x => x.CreatedAt);
+                }
+            }
+            else if (column == "Brand")
+            {
+
+                if (orderby == "asc")
+                {
+                    query = query.OrderBy(x => x.Brand);
+
+                }
+                else
+                {
+                    query = query.OrderByDescending(x => x.Brand);
+                }
+            }
+            else if (column == "Price")
+            {
+
+                if (orderby == "asc")
+                {
+                    query = query.OrderBy(x => x.Price);
+
+                }
+                else
+                {
+                    query = query.OrderByDescending(x => x.Price);
+                }
+            }
+          
+            else if (column == "Category")
+            {
+
+                if (orderby == "asc")
+                {
+                    query = query.OrderBy(x => x.Category);
+
+                }
+                else
+                {
+                    query = query.OrderByDescending(x => x.Category);
+                }
+            }
+            else
+            {
+                if (orderby == "asc")
+                {
+                    query = query.OrderBy(x => x.Id);
+
+                }
+                else
+                {
+                    query = query.OrderByDescending(x => x.Id);
+                }
+            }
+                var totalpages = (int)Math.Ceiling((count / (double)pageSize));
+
+           query =   query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
+
+
+            
+            var products  = query.ToList();
+
+
+            ViewData["TotalPage"] = totalpages;
+            ViewData["pageNumber"] = pageNumber;
+            ViewData["Search"] = search ?? "";
+
+            ViewData["Column"] = column;
+            ViewData["OrderBy"] = orderby;
+            
 
 
             return View(products);
