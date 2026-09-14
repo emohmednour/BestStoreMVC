@@ -5,6 +5,7 @@ using BestStoreMVC.Models;
 
 namespace BestStoreMVC.Controllers
 {
+    [Route("/admin/[controller]/{action=Index}")]
     public class ProductsController(
         ApplicationDBContext db,
         IWebHostEnvironment webHostEnvironment) : Controller
