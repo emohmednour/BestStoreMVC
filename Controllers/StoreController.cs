@@ -7,7 +7,7 @@ namespace BestStoreMVC.Controllers
     public class StoreController(ApplicationDBContext  db) : Controller
     {
         private readonly int PageSize = 8;
-        public IActionResult Index(int PageNumber )
+        public IActionResult Index(int PageNumber ,string search)
         {
            IQueryable<Product> query = db.Products;
 

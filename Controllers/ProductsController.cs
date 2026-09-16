@@ -120,7 +120,8 @@ namespace BestStoreMVC.Controllers
                     query = query.OrderByDescending(x => x.Id);
                 }
             }
-                var totalpages = (int)Math.Ceiling((count / (double)pageSize));
+               
+           var totalpages = (int)Math.Ceiling((count / (double)pageSize));
 
            query =   query.Skip((pageNumber - 1) * pageSize).Take(pageSize);
 
