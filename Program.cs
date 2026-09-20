@@ -1,4 +1,7 @@
+using BestStoreMVC.Migrations;
+using BestStoreMVC.Models;
 using BestStoreMVC.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +12,16 @@ builder.Services.AddControllersWithViews();
 var cs = builder.Configuration.GetConnectionString("cs");
 builder.Services.AddDbContext<ApplicationDBContext>(
     opt=>opt.UseSqlServer(cs));
+
+builder.Services.AddIdentity<ApplicationUser,IdentityRole>(
+    option =>
+    {
+        option.Password.RequiredLength = 6;
+        option.Password.RequireNonAlphanumeric = false;
+        option.Password.RequireUppercase = false;
+        option.Password.RequireLowercase = false;
+
+    }).AddEntityFrameworkStores<ApplicationDBContext>();
 
 
 var app = builder.Build();
