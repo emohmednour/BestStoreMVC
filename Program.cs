@@ -4,6 +4,8 @@ using BestStoreMVC.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
+Console.WriteLine("Program started");
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -45,4 +47,19 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.Run();
+
+using (var scope = app.Services.CreateScope())
+{
+    var UserManager = scope.ServiceProvider.GetService(typeof(UserManager<ApplicationUser>))
+        as UserManager<ApplicationUser>;
+
+    var roleManger  = scope.ServiceProvider.GetService(typeof(RoleManager<IdentityRole>))
+        as RoleManager<IdentityRole>;
+    
+
+    await DataBaseInitializer.SeedDataAsync(UserManager, roleManger);
+}
+
+
+
+    app.Run();
