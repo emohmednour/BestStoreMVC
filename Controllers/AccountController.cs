@@ -68,5 +68,43 @@ public class AccountController
 
 
     }
-     
+
+
+
+    public IActionResult Login()
+    {
+        if (signInManager.IsSignedIn(User))
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Login(LoginDTO loginDTO)
+    {
+        if (signInManager.IsSignedIn(User))
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        if (!ModelState.IsValid) {
+        
+        return View(loginDTO);
+        }
+
+        var  result= await signInManager.PasswordSignInAsync(loginDTO.Email,loginDTO.Password,loginDTO.RememberMe,false);
+        if(result.Succeeded)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        else
+        {
+
+            ViewBag.ErrorMassage = "PLZ insert a vaild attemp";
+        }
+
+
+
+        return View(loginDTO);
+    }
 }
