@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using BestStoreMVC.Models.DTOs;
 using BestStoreMVC.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BestStoreMVC.Controllers
 {
     [Route("/admin/[controller]/{action=Index}")]
+    [Authorize]
     public class ProductsController(
         ApplicationDBContext db,
         IWebHostEnvironment webHostEnvironment) : Controller

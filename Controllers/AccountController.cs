@@ -1,5 +1,6 @@
 ﻿using BestStoreMVC.Models;
 using BestStoreMVC.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -107,4 +108,63 @@ public class AccountController
 
         return View(loginDTO);
     }
+    [Authorize]
+    public async Task<IActionResult> Profile() {
+
+        var user = await userManager.GetUserAsync(User);
+        if(user is null) {
+
+            return RedirectToAction("Index", "Home");
+
+        }
+
+        ProfileDTO profileDTO = new ProfileDTO
+        {
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.Email ?? "",
+            PhoneNumber = user.PhoneNumber,
+            Address = user.Address,
+
+        };
+
+
+        return View(profileDTO);
+    }
+    [HttpPost]
+    public async Task<IActionResult> Profile(ProfileDTO profileDTO) {
+
+        if (!ModelState.IsValid)
+        {
+            ViewBag.ErrorMessage = "Please fill all the required fields with valid values";
+            return View(profileDTO);
+        }
+        var user = await userManager.GetUserAsync(User);
+
+        if (user == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+        user.FirstName = profileDTO.FirstName;
+        user.LastName = profileDTO.LastName;
+        user.Email = profileDTO.Email;
+        user.UserName = profileDTO.Email;
+        user.PhoneNumber = profileDTO.PhoneNumber;
+        user.Address = profileDTO.Address;
+
+        var result  =  await userManager.UpdateAsync(user);
+
+        if (result.Succeeded) {
+
+            ViewBag.SuccessMessage = "Profile updated successfully";
+        }
+        else
+        {
+            ViewBag.ErrorMessage = "Unable to update the profile: " + result.Errors.First().Description;
+        }
+            return View(profileDTO);
+    }
+
+    public IActionResult AccessDenied() => RedirectToAction("Index", "Home");
 }
