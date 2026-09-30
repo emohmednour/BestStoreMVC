@@ -1,14 +1,16 @@
 ﻿using BestStoreMVC.Models;
 using BestStoreMVC.Models.DTOs;
+using BestStoreMVC.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace BestStoreMVC.Controllers;
 
 public class AccountController
     (SignInManager<ApplicationUser> signInManager,
-    UserManager<ApplicationUser> userManager) : Controller
+    UserManager<ApplicationUser> userManager, EmailSender emailSender) : Controller
 {
     public IActionResult Register()
     {
@@ -165,6 +167,8 @@ public class AccountController
         }
             return View(profileDTO);
     }
+
+
 
     public IActionResult AccessDenied() => RedirectToAction("Index", "Home");
 }

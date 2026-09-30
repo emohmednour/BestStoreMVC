@@ -24,7 +24,7 @@ builder.Services.AddIdentity<ApplicationUser,IdentityRole>(
         option.Password.RequireLowercase = false;
 
     }).AddEntityFrameworkStores<ApplicationDBContext>();
-
+   
 
 var app = builder.Build();
 
