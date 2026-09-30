@@ -1,8 +1,8 @@
-﻿using RestSharp;
-namespace BestStoreMVC.Services
+﻿
+
+
+namespace BestStoreMVC.Services;
+public class EmailSender(IConfiguration configuration)
 {
-    public class EmailSender(IConfiguration configuration)
-    {
-       
-    }
+   
 }
