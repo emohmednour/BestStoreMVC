@@ -23,8 +23,10 @@ builder.Services.AddIdentity<ApplicationUser,IdentityRole>(
         option.Password.RequireUppercase = false;
         option.Password.RequireLowercase = false;
 
-    }).AddEntityFrameworkStores<ApplicationDBContext>();
+    }).AddEntityFrameworkStores<ApplicationDBContext>()
+    .AddDefaultTokenProviders();
    
+builder.Services.AddTransient<EmailSender>();
 
 var app = builder.Build();
 

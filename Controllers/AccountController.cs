@@ -169,6 +169,47 @@ public class AccountController
     }
 
 
+    public IActionResult ForgetPassword() {
 
+        if (signInManager.IsSignedIn(User))
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        return View();
+
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ForgetPassword([Required,EmailAddress] string email)
+    {
+        if(signInManager.IsSignedIn(User))
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+        if (!ModelState.IsValid)
+        {
+            ViewBag.ErrorMessage = ModelState["email"]?.Errors.First().ErrorMessage ?? "Invalid Email ";
+            return View();
+        }
+        ViewBag.Email = email;
+        var user =await userManager.FindByEmailAsync(email);
+        if (user != null)
+        {
+            //generate token
+            var token  = await userManager.GeneratePasswordResetTokenAsync(user);
+            var resetURL = Url.ActionLink("ResetPasswoed", "Account", new { token } ) ?? "Url Error";
+
+
+            //send email
+            var username = user.UserName +" "+user.LastName;
+            await emailSender.SendEmailAsync(email,username,"Rest Password" ,resetURL);
+
+        }
+        ViewBag.SuccessMessage = "Please check your Email account and click on the Password Reset link!";
+
+        return View();
+
+    }
     public IActionResult AccessDenied() => RedirectToAction("Index", "Home");
 }
