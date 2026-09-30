@@ -11,21 +11,20 @@
 	<div class="col-md-8 mx-auto rounded border p-4">
 		<h2 class="mb-3">Profile</h2>
 		<hr />
-
 		@if (ViewBag.ErrorMessage != null)
 		{
-		<div class='alert alert-success  alert-dismissible fade show' role='alert'>
-			<strong>@ViewBag.ErrorMessage</strong>
-			<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-		</div>
+			<div class='alert alert-danger  alert-dismissible fade show' role='alert'>
+				<strong>@ViewBag.ErrorMessage</strong>
+				<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+			</div>
 
 		}
-		else if(ViewBag.SuccessMessage != null)
+		else if (ViewBag.SuccessMessage != null)
 		{
-		<div class='alert alert-danger alert-dismissible fade show' role='alert'>
-			<strong>@ViewBag.SuccessMessage</strong>
-			<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
-		</div>
+			<div class='alert alert-success alert-dismissible fade show' role='alert'>
+				<strong>@ViewBag.SuccessMessage</strong>
+				<button type='button' class='btn-close' data-bs-dismiss='alert' aria-label='Close'></button>
+			</div>
 		}
 
 

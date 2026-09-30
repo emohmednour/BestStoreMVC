@@ -198,17 +198,76 @@ public class AccountController
         {
             //generate token
             var token  = await userManager.GeneratePasswordResetTokenAsync(user);
-            var resetURL = Url.ActionLink("ResetPasswoed", "Account", new { token } ) ?? "Url Error";
+            var resetURL = Url.ActionLink("ResetPassword", "Account", new { token } ) ?? "Url Error";
 
 
             //send email
             var username = user.UserName +" "+user.LastName;
-            await emailSender.SendEmailAsync(email,username,"Rest Password" ,resetURL);
+            await emailSender.SendEmailAsync(email,username,"Reset Password" ,resetURL);
 
         }
         ViewBag.SuccessMessage = "Please check your Email account and click on the Password Reset link!";
 
         return View();
+
+    }
+
+
+
+    public IActionResult ResetPassword(string? token ) {
+        if (signInManager.IsSignedIn(User))
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+        if (token == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+        return View();
+
+    }
+    [HttpPost]
+    public async Task<IActionResult> ResetPassword(string? token,PasswordResetDTO model) {
+        if (signInManager.IsSignedIn(User))
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+        if (token == null)
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+        if (!ModelState.IsValid) {
+
+            return View(model);
+        }
+
+        var user = await userManager.FindByEmailAsync(model.Email);
+        if (user == null)
+        {
+            ViewBag.ErrorMessage = "Token not valid!";
+            return View(model);
+        }
+
+        var result = await userManager.ResetPasswordAsync(user,token,model.Password);
+        
+
+        if (result.Succeeded)
+        {
+            ViewBag.SuccessMessage = "Password reset successfully!";
+        }
+        else
+        {
+            foreach (var error in result.Errors)
+            {
+
+                ModelState.AddModelError("", error.Description);
+            }   
+        }
+
+            return View(model);
 
     }
     public IActionResult AccessDenied() => RedirectToAction("Index", "Home");
